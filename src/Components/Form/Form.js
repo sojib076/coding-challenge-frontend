@@ -1,62 +1,93 @@
 import axios from 'axios';
-import React from 'react';
+import { useState } from 'react';
+
 import { useQuery } from 'react-query';
 
-const Form = () => {
- // geting user form api 
-    const {data:users=[],isError,isLoading}=useQuery({
-        queryKey:['user'],
-        queryFn:async()=>{
-            const {data}=await axios.get('https://jsonplaceholder.typicode.com/users')
+
+
+
+
+const Form = ({setPosition}) => {
+
+    // geting user form api 
+    const { data: users = [], isError, isLoading } = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => {
+            const { data } = await axios.get('https://jsonplaceholder.typicode.com/users')
             return data
         }
     })
+
     if (isLoading) {
         return <div>Loading...</div>
     }
-        
+
     if (isError) {
         return <div>Error...</div>
     }
-    const handelSubmit=(e)=>{
+
+    const handelSubmit = (e) => {
         e.preventDefault()
-       const userid=e.target.option.value
-       const title = e.target.title.value
+        const userid = e.target.option.value
+        const title = e.target.title.value
         const body = e.target.body.value
-        if (userid===''||title===''||body==='') {
-            alert('please fill all the fields')
+
+        const user = {
+            title: title,
+            body: body,
+            userId: userid
         }
-            const ueser ={
-                title : title,
-                body : body,
-                userId : userid
-            }
-            axios.post('https://jsonplaceholder.typicode.com/posts',ueser)
-            .then(res=>{
-                console.log(res)
-            }).catch(err=>{
-                console.log(err)
-            })
-            
+
+        if (userid === '' || title === '' || body === '') {
+            alert('please fill all the fields')
+        } else if (userid === 0) {
+            alert('please select a user')
+
+        } else {
+            axios.post('https://jsonplaceholder.typicode.com/posts', user)
+                .then(res => {
+                    alert('post created')
+                    console.log(res);
+                }).catch(err => {
+
+                    console.log(err);
+                })
+        }
+
+
     }
- 
+
+    const handelmap = (e) => {
+        e.preventDefault()
+        const userid = e.target.value
+        axios.get(`https://jsonplaceholder.typicode.com/users/${userid}`)
+            .then(res => {
+                const { lat, lng } = res.data.address.geo
+                const location = [lat, lng].map(Number)
+                setPosition(location)
+              
+            })
+    }
+
     return (
         <div>
             <div className="hero min-h-screen bg-base-200">
-                <div className="hero-content flex-col lg:flex-row-reverse">
+                <div className="hero-content flex-row lg:flex-row-reverse">
+                     
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+
                         <form className="card-body" onSubmit={handelSubmit}>
                             <div className="form-control w-full max-w-xs">
                                 <label className="label">
-                                    <span className="label-text">Pick a User</span>                 
+                                    <span className="label-text">Pick a User</span>
                                 </label>
-                                <select className="select select-bordered" name='option'>
-                                    <option value="0">Select a user</option> 
-                                    {users.map((user)=>{
+                                <select className="select select-bordered" name='option' onBlur={handelmap}>
+                                    <option value="0">Select a user</option>
+                                    {users.map((user) => {
                                         return <option value={user.id} key={user.id}> {user.name}</option>
                                     })}
                                 </select>
-                        
+
                             </div>
                             <div className="form-control">
                                 <label className="label">
@@ -68,7 +99,7 @@ const Form = () => {
                                 <label className="label">
                                     <span className="label-text">body</span>
                                 </label>
-                                <input type="text" placeholder="body" className="input input-bordered" name='body'/>
+                                <input type="text" placeholder="body" className="input input-bordered" name='body' />
                                 <label className="label">
 
                                 </label>

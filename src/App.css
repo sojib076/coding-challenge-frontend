@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* container  */
+.leaftlet-container {
+    width: 100%;
+    height: 100%;
+}
