@@ -1,12 +1,7 @@
 import axios from 'axios';
-import { useState } from 'react';
-
+import { toast } from 'react-hot-toast';
 import { useQuery } from 'react-query';
-
-
-
-
-
+import Loading from '../Loading';
 const Form = ({setPosition}) => {
 
     // geting user form api 
@@ -19,11 +14,12 @@ const Form = ({setPosition}) => {
     })
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <Loading></Loading>
     }
-
+    
     if (isError) {
-        return <div>Error...</div>
+        console.log(isError);
+        return toast.error('something went wrong')
     }
 
     const handelSubmit = (e) => {
@@ -39,21 +35,19 @@ const Form = ({setPosition}) => {
         }
 
         if (userid === '' || title === '' || body === '') {
-            alert('please fill all the fields')
-        } else if (userid === 0) {
-            alert('please select a user')
-
+            toast.error('please fill up all the field')
+        } else if (userid == 0) {
+            toast.error('please select a user')
         } else {
             axios.post('https://jsonplaceholder.typicode.com/posts', user)
                 .then(res => {
-                    alert('post created')
+                    toast.success('post created successfully')
                     console.log(res);
                 }).catch(err => {
 
                     console.log(err);
                 })
         }
-
 
     }
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './App.css';
 import Form from './Components/Form/Form';
 import Singlemap from './Components/Form/Singlemap';
+import { Toaster } from 'react-hot-toast';
 
 
 
@@ -12,11 +13,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className='text-5xl font-thin'> Hi</h1>
-    
         <Form setPosition={setPosition}></Form>
         <Singlemap location={location}> </Singlemap>
       </header>
+      <Toaster />
     </div>
   );
 }

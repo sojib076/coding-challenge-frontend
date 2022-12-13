@@ -1,10 +1,18 @@
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import L from 'leaflet';
+
  
 import './map.css'
 import 'leaflet/dist/leaflet.css';
 
 /* container  */
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
 
 
 const Singlemap = ({location}) => {
@@ -20,7 +28,7 @@ const Singlemap = ({location}) => {
         />
         <Marker position={position}>
           <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
+            User Location. <br /> .
           </Popup>
         </Marker>
       </MapContainer>
